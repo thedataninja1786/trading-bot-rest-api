@@ -385,7 +385,7 @@ def update_trade_config():
     try:
         conn = mysql.connector.connect( host='127.0.0.1',port=1234,user='root',password="1234",database='crypto-prices')
         cursor = conn.cursor()
-        q = "SELECT * FROM asset_first_registration WHERE email = %s AND asset = %s"
+        q = "SELECT * FROM AssetFirstRegistration WHERE email = %s AND asset = %s"
         df = pd.read_sql_query(q, conn, params=(email, asset))
     except Exception as e:
         abort(500, description="Internal Server Error")
@@ -396,7 +396,7 @@ def update_trade_config():
         abort(403, description="You need to register a trade first")
 
     try:
-        q = "UPDATE asset_first_registration SET vendors_commission = %s, min_transaction = %s, starting_budget = %s WHERE email = %s AND asset = %s"
+        q = "UPDATE AssetFirstRegistration SET vendors_commission = %s, min_transaction = %s, starting_budget = %s WHERE email = %s AND asset = %s"
         cursor.execute(q, (vendor_commission, min_transaction, starting_budget, email, asset))
         conn.commit()       
         return jsonify({"message": "Trade Updated Successfully"}), 200
@@ -434,7 +434,7 @@ def delete_trade_config():
         abort(403, description="Trade does not exist, register a trade first")
 
     try:
-        q = "DELETE FROM asset_first_registration WHERE email = %s AND asset = %s"
+        q = "DELETE FROM AssetFirstRegistration WHERE email = %s AND asset = %s"
         cursor.execute(q, (email, asset))
         q = "DELETE FROM trades WHERE email = %s AND asset = %s"
         cursor.execute(q, (email, asset))
